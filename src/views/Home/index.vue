@@ -39,6 +39,7 @@ export default {
   created () {
     this.getMenus()
   },
+
   data () {
     return {
       list: [],
@@ -56,6 +57,7 @@ export default {
       try {
         const res = await getMenus()
         this.list = res.data.data
+        console.log(this.list)
       } catch (err) {
         console.log(err)
       }
@@ -68,7 +70,8 @@ export default {
       this.isCollapse = !this.isCollapse
     }
   },
-  computed: {},
+  computed: {
+  },
   watch: {},
   filters: {},
   components: { Crumbs }

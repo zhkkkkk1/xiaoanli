@@ -4,30 +4,28 @@
       <el-button type="primary" class="add">添加角色</el-button>
       <el-table :data="userlist" style="width: 100%" stripe border>
         <el-table-column label="#" width="48px" type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="商品名称">
-                <span>{{ props.row.name }}</span>
-              </el-form-item>
-              <el-form-item label="所属店铺">
-                <span>{{ props.row.shop }}</span>
-              </el-form-item>
-              <el-form-item label="商品 ID">
-                <span>{{ props.row.id }}</span>
-              </el-form-item>
-              <el-form-item label="店铺 ID">
-                <span>{{ props.row.shopId }}</span>
-              </el-form-item>
-              <el-form-item label="商品分类">
-                <span>{{ props.row.category }}</span>
-              </el-form-item>
-              <el-form-item label="店铺地址">
-                <span>{{ props.row.address }}</span>
-              </el-form-item>
-              <el-form-item label="商品描述">
-                <span>{{ props.row.desc }}</span>
-              </el-form-item>
-            </el-form>
+          <template slot-scope="scope">
+            <el-row v-for="(item, index) in scope.row.children" :key="item.id"
+              :class="['roles_data', 'bom', index === 0 ? 'top' : '']">
+              <el-col :span="5">
+                <el-tag>{{ item.authName }}</el-tag>
+                <i class="el-icon-caret-right"></i>
+              </el-col>
+              <el-col :span="19">
+                <el-row v-for="(val, ind) in item.children" :key="val.id"
+                  :class="['roles_data', ind === 0 ? '' : 'top']">
+                  <el-col :span="6">
+                    <el-tag type="success">{{ val.authName }}</el-tag>
+                    <i class="el-icon-caret-right"></i>
+                  </el-col>
+                  <el-col :span="18">
+                    <el-tag v-for="item1 in val.children" :key="item1.id" closable
+                      @close="open(scope.row.id, item1.id)">{{ item1.authName }}
+                    </el-tag>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
           </template>
         </el-table-column>
         <el-table-column prop="index" label="#" width="48px">
@@ -43,8 +41,9 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-dialog title="分配权限" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-      <el-tree :data="rightTree" :props="defaultProps" @node-click="handleNodeClick" show-checkbox label="authName">
+    <el-dialog title="分配权限" :visible.sync="dialogVisible" width="30%">
+      <el-tree :data="rightTree" :props="defaultProps" @node-click="handleNodeClick" show-checkbox label="authName"
+        default-expand-all>
       </el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -60,12 +59,11 @@ export default {
   created () {
     this.$store.dispatch('roles/userList')
     this.$store.dispatch('roles/tree')
-    console.log(this.rightTree)
+    console.log(this.userlist)
   },
   data () {
     return {
       dialogVisible: false,
-      children: [],
       defaultProps: {
         children: 'children',
         label: 'authName'
@@ -76,14 +74,6 @@ export default {
     ...mapActions(['userList', 'tree']),
     fofo (id) {
       this.dialogVisible = true
-      this.children = this.userlist[id].children
-    },
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => { })
     },
     handleNodeClick (data) {
       console.log(data)

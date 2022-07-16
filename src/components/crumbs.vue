@@ -13,9 +13,13 @@
 export default {
   name: 'crumbs',
   created () {
+    this.routes = this.$router.options.routes
+    console.log(this.routes)
   },
   data () {
-    return {}
+    return {
+      routes: []
+    }
   },
   methods: {},
   computed: {},

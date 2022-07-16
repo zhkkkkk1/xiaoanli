@@ -4,8 +4,8 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', redirect: '/login' },
-  { path: '/login', component: () => import('@/views/Login') },
+  { path: '/', redirect: '/login', hidden: true },
+  { path: '/login', component: () => import('@/views/Login'), hidden: true },
   {
     path: '/home',
     component: () => import('@/views/Home'),
@@ -26,7 +26,8 @@ const routes = [
       path: '/orders', component: () => import('@/views/Home/Orders'), name: '订单列表'
     }
     ]
-  }]
+  }
+]
 
 const router = new VueRouter({
   routes

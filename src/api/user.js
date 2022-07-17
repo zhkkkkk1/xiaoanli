@@ -42,9 +42,29 @@ export const editUser = ({ id, mobile = '', email = '' }) => {
   })
 }
 
+/**
+ * 删除用户
+ * @param {*} id
+ * @returns
+ */
 export const delUser = (id) => {
   return request({
     url: `users/${id}`,
     method: 'delete'
+  })
+}
+
+/**
+ * 添加用户
+ * @param {} param0
+ * @returns
+ */
+export const addUser = ({ username, password, email, mobile }) => {
+  return request({
+    method: 'POST',
+    url: 'users',
+    data: {
+      username, password, email, mobile
+    }
   })
 }

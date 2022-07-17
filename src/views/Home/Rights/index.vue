@@ -10,9 +10,14 @@
         </el-table-column>
         <el-table-column label="权限登记">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.level == 0">等级一</el-tag>
+            <!-- <el-tag v-if="scope.row.level == 0">等级一</el-tag>
             <el-tag type="success" v-else-if="scope.row.level == 1">等级二</el-tag>
-            <el-tag type="warning" v-else-if="scope.row.level == 2">等级三</el-tag>
+            <el-tag type="warning" v-else-if="scope.row.level == 2">等级三</el-tag> -->
+
+            <el-tag :type="scope.row.level == 0 ? '' : scope.row.level == 1 ? 'success' : 'warning'">{{
+                scope.row.level == 0 ? '等级一' : scope.row.level == 1 ? '等级二' : '等级三'
+            }}</el-tag>
+
           </template>
         </el-table-column>
       </el-table>

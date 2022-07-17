@@ -6,7 +6,7 @@
         <div style="width:33%">
           <el-input placeholder="请输入内容" v-model="obj.query" @keyup.enter.native="seachUser">
             <template #suffix>
-              <i class="el-icon-delete" v-if="obj.query.length !== 0" @click="obj.query = ''"></i>
+              <i class="el-icon-delete" v-if="obj.query.length !== 0" @click="emptyInput"></i>
             </template>
             <template slot="append">
               <el-button @click="seachUser"><i class="el-icon-search"></i></el-button>
@@ -35,9 +35,10 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180px">
-          <template>
+          <template v-slot="scope">
             <!-- 修改 -->
-            <el-button type="primary" size="mini" icon="el-icon-edit" @click="addTask"></el-button>
+            <el-button type="primary" size="mini" icon="el-icon-edit"
+              @click="editUser(scope.row.username, scope.row.id)"></el-button>
             <el-button type="danger" size="mini" icon="el-icon-delete" @click="addTask"> </el-button>
             <el-button type="warning" size="mini" icon="el-icon-setting" @click="addTask"></el-button>
           </template>
@@ -50,18 +51,57 @@
         </el-pagination>
       </div>
     </el-card>
+    <!-- 添加用户 dialog -->
     <div>
-      <Dialog :show.sync="previewDialog"></Dialog>
+      <el-dialog title="添加用户对话框" :visible.sync="previewDialog1" width="50%">
+        <el-form label-width="100px" :model="userInfo1" :rules="rules1" ref="userInfo1" resetFields>
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="userInfo1.username"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input v-model="userInfo1.password"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="userInfo1.email"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号" prop="mobile">
+            <el-input v-model="userInfo1.mobile"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="previewDialog1 = false">取 消</el-button>
+          <el-button type="primary" @click="commitUser1">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+    <!-- 修改用户信息 -->
+    <div>
+      <el-dialog title="添加用户对话框" :visible.sync="previewDialog2" width="50%">
+        <el-form label-width="100px" :model="userInfo2" :rules="rules2" ref="userInfo2" resetFields>
+          <el-form-item label="用户名">
+            <el-input v-model="username" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="userInfo2.email"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号" prop="mobile">
+            <el-input v-model="userInfo2.mobile"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="previewDialog2 = false">取 消</el-button>
+          <el-button type="primary" @click="commitUser2">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import Dialog from '@/components/dialog.vue'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, editUser } from 'vuex'
+import { addUser } from '@/api/user'
 export default {
   components: {
-    Dialog
   },
   created () {
     this.getUserList()
@@ -76,7 +116,27 @@ export default {
       },
       currentPage: 1,
       pageSize: [1, 2, 5, 10],
-      previewDialog: false
+      previewDialog1: false,
+      userInfo1: {
+        username: '', password: '', email: '', mobile: ''
+      },
+      rules1: {
+        username: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }],
+        password: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }],
+        email: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }],
+        mobile: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }]
+      },
+      previewDialog2: false,
+      userInfo2: {
+        email: '', mobile: '', id: ''
+      },
+      username: '',
+      rules2: {
+        username: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }],
+        password: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }],
+        email: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }],
+        mobile: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }]
+      }
     }
   },
   methods: {
@@ -98,9 +158,51 @@ export default {
     seachUser () {
       this.$store.dispatch('users/getUserList', this.obj)
     },
-    addTask (id) {
-      this.previewDialog = true
+    emptyInput () {
+      this.obj.query = ''
+      this.$store.dispatch('users/getUserList', this.obj)
+    },
+    // 添加用户
+    addTask () {
+      this.previewDialog1 = true
+    },
+    async commitUser1 () {
+      try {
+        this.$refs.userInfo1.validate()
+        this.previewDialog1 = false
+        try {
+          await addUser(this.userInfo1)
+          this.$store.dispatch('users/getUserList', this.obj)
+        } catch (err) {
+          console.log(err)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // 修改信息
+    editUser (name, id) {
+      this.previewDialog2 = true
+      this.username = name
+      this.userInfo2.id = id
+    },
+    async commitUser2 () {
+      // try {
+      console.log(this.userInfo2)
+      this.$refs.userInfo2.validate()
+      this.previewDialog2 = false
+      // try {
+      const res = await editUser(this.userInfo2)
+      console.log(res)
+      //     this.$store.dispatch('users/getUserList', this.obj)
+      //   } catch (err) {
+      //     console.log(err)
+      //   }
+      // } catch (err) {
+      //   console.log(err)
+      // }
     }
+
   },
   computed: {
     ...mapGetters(['userList', 'total'])

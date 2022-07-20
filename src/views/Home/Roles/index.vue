@@ -26,7 +26,7 @@
                 </el-row>
               </el-col>
             </el-row>
-          </template>c
+          </template>
         </el-table-column>
         <el-table-column prop="index" label="#" width="48px">
         </el-table-column>

@@ -38,9 +38,11 @@ const routes = [
     // },
     {
       path: 'params', component: () => import('@/views/Home/Params'), name: '分类列表'
-    }, {
+    },
+    {
       path: 'categories', component: () => import('@/views/Home/Categories'), name: '商品分类'
-    }, {
+    },
+    {
       path: 'orders', component: () => import('@/views/Home/Orders'), name: '订单列表'
     }
     ]

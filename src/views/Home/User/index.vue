@@ -39,7 +39,8 @@
             <!-- 修改 -->
             <el-button type="primary" size="mini" icon="el-icon-edit"
               @click="editUser(scope.row.username, scope.row.id)"></el-button>
-            <el-button type="danger" size="mini" icon="el-icon-delete" @click="addTask"> </el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" @click="delUser(scope.row.id)">
+            </el-button>
             <el-button type="warning" size="mini" icon="el-icon-setting" @click="addTask"></el-button>
           </template>
         </el-table-column>
@@ -93,13 +94,21 @@
           <el-button type="primary" @click="commitUser2">确 定</el-button>
         </span>
       </el-dialog>
+      <!-- 删除 -->
+      <el-dialog title="提示" :visible.sync="delUserdialog" width="30%" >
+        <span>此操作将永久删除改用户，是否继续</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="delUserdialog = false">取 消</el-button>
+          <el-button type="primary" @click="delUser1">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, editUser } from 'vuex'
-import { addUser } from '@/api/user'
+import { addUser, delUser } from '@/api/user'
 export default {
   components: {
   },
@@ -136,7 +145,9 @@ export default {
         password: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }],
         email: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }],
         mobile: [{ min: 3, max: 6, trigger: 'blur', required: 'ture' }]
-      }
+      },
+      delUserdialog: false,
+      Id: null
     }
   },
   methods: {
@@ -201,6 +212,17 @@ export default {
       // } catch (err) {
       //   console.log(err)
       // }
+    },
+    delUser (id) {
+      this.delUserdialog = true
+      this.Id = id
+      console.log(this.Id)
+    },
+    async delUser1 () {
+      const res = await delUser(this.Id)
+      console.log(res)
+      this.getUserList()
+      this.delUserdialog = false
     }
 
   },

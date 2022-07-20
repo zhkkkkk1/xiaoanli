@@ -49,7 +49,6 @@ export default {
         'el-icon-document-copy',
         'el-icon-monitor'],
       isCollapse: false
-
     }
   },
   methods: {

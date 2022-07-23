@@ -56,7 +56,6 @@ export default {
       try {
         const res = await getMenus()
         this.list = res.data.data
-        console.log(this.list)
       } catch (err) {
         console.log(err)
       }

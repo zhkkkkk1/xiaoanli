@@ -1,7 +1,7 @@
 <template>
   <el-card>
     <!-- header -->
-    <div v-if="$route.path === '/goods'">
+    <div v-if="$route.path === '/home/goods'">
       <div style="display:flex">
         <div style="width:33%">
           <el-input placeholder="请输入内容" v-model="obj.query" @keyup.enter.native="seachUser">
@@ -14,7 +14,7 @@
           </el-input>
         </div>
         <div>
-          <el-button type="primary" style="margin-left:20px" @click="addTask; $router.push('/goods/add')">添加用户
+          <el-button type="primary" style="margin-left:20px" @click="addTask; $router.push('/home/goods/add')">添加用户
           </el-button>
         </div>
       </div>
@@ -54,7 +54,6 @@ import { mapGetters } from 'vuex'
 export default {
   created () {
     this.$store.dispatch('goods/getGoodsList', this.obj)
-    console.log(this.goodsList)
   },
   data () {
     return {

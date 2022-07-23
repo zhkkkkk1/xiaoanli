@@ -15,3 +15,11 @@ export const tree = () => {
     url: 'rights/tree'
   })
 }
+
+// 删除角色指定权限
+export const delRolesRight = ({ roleId, rightId }) => {
+  return request({
+    url: `roles/${roleId}/rights/${rightId}`,
+    method: 'DELETE'
+  })
+}

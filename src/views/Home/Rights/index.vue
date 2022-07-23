@@ -31,7 +31,6 @@ import { mapGetters } from 'vuex'
 export default {
   created () {
     this.$store.dispatch('rights/getRightsList', 'list')
-    console.log(this.rightList)
   },
   data () {
     return {}

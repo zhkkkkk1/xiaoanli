@@ -114,7 +114,6 @@ export default {
   },
   created () {
     this.getUserList()
-    console.log(this.userList)
   },
   data () {
     return {
@@ -199,7 +198,6 @@ export default {
     },
     async commitUser2 () {
       // try {
-      console.log(this.userInfo2)
       this.$refs.userInfo2.validate()
       this.previewDialog2 = false
       // try {
@@ -216,7 +214,6 @@ export default {
     delUser (id) {
       this.delUserdialog = true
       this.Id = id
-      console.log(this.Id)
     },
     async delUser1 () {
       const res = await delUser(this.Id)

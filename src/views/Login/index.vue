@@ -51,7 +51,7 @@ export default {
           const res = await login(this.loginForm)
           // 把token存到vuex中，并持久化
           this.$store.commit('login/setToken', res.data.data.token)
-          this.$router.push('/users')
+          this.$router.push('/home/users')
         } catch (err) {
           console.log(err)
         }

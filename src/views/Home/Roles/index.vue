@@ -2,26 +2,23 @@
   <div>
     <el-card>
       <el-button type="primary" class="add">添加角色</el-button>
-      <el-table :data="userlist" style="width: 100%" stripe border>
+      <el-table :data="user" style="width: 100%" stripe border>
         <el-table-column label="#" width="48px" type="expand">
-          <template slot-scope="scope">
-            <el-row v-for="(item, index) in scope.row.children" :key="item.id"
-              :class="['roles_data', 'bom', index === 0 ? 'top' : '']">
+          <template v-slot="{ row }">
+            <el-row style="display: flex; border-top: 1px solid #eee; align-items: center;"
+              v-for="(item, index) in row.children " :key="index">
               <el-col :span="5">
                 <el-tag>{{ item.authName }}</el-tag>
-                <i class="el-icon-caret-right"></i>
               </el-col>
               <el-col :span="19">
-                <el-row v-for="(val, ind) in item.children" :key="val.id"
-                  :class="['roles_data', ind === 0 ? '' : 'top']">
-                  <el-col :span="6">
-                    <el-tag type="success">{{ val.authName }}</el-tag>
-                    <i class="el-icon-caret-right"></i>
+                <el-row v-for="(item1, index) in item.children" :key="index" style="border-top: 1px solid  #eee;">
+                  <el-col :span="6" style="display: block;">
+                    <el-tag type="success">{{ item.authName }} </el-tag>
                   </el-col>
-                  <el-col :span="18">
-                    <el-tag v-for="item1 in val.children" :key="item1.id" closable
-                      @close="open(scope.row.id, item1.id)">{{ item1.authName }}
-                    </el-tag>
+                  <el-col :span="18" style="display: inline-block;">
+                    <el-tag v-for="(item2, index) in item1.children" :key="index" closable @close="del(item2, row)">{{
+                        item2.authName
+                    }}</el-tag>
                   </el-col>
                 </el-row>
               </el-col>
@@ -42,8 +39,7 @@
       </el-table>
     </el-card>
     <el-dialog title="分配权限" :visible.sync="dialogVisible" width="30%">
-      <el-tree :data="rightTree" :props="defaultProps" @node-click="handleNodeClick" show-checkbox label="authName"
-        default-expand-all>
+      <el-tree :data="rightTree" :props="defaultProps" show-checkbox label="authName" default-expand-all>
       </el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -54,19 +50,25 @@
 </template>
 
 <script>
+import { delRolesRight } from '@/api/roles'
 import { mapActions, mapGetters } from 'vuex'
 export default {
   created () {
     this.$store.dispatch('roles/userList')
     this.$store.dispatch('roles/tree')
-    console.log(this.userlist)
+    this.user = JSON.parse(JSON.stringify(this.userlist))
   },
   data () {
     return {
+      user: '',
       dialogVisible: false,
       defaultProps: {
         children: 'children',
         label: 'authName'
+      },
+      delInfo: {
+        roleId: '',
+        rightId: ''
       }
     }
   },
@@ -75,8 +77,26 @@ export default {
     fofo (id) {
       this.dialogVisible = true
     },
-    handleNodeClick (data) {
-      console.log(data)
+
+    del (item2, row) {
+      this.delInfo.rightId = row.id
+      this.delInfo.roleId = item2.id
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        await delRolesRight({ rightId: this.delInfo.roleId, roleId: this.delInfo.rightId })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   },
   computed: {
@@ -95,5 +115,19 @@ export default {
 
 .add {
   margin-bottom: 20px;
+}
+
+.el-tag {
+  display: inline-block;
+  height: 32px;
+  padding: 0 10px;
+  margin: 10px;
+  line-height: 30px;
+  font-size: 12px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
+  box-sizing: border-box;
+  white-space: nowrap;
 }
 </style>

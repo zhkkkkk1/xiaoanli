@@ -119,7 +119,6 @@ export default {
     },
     foo () {
       this.dialogVisible = false
-      console.log(1)
     }
   }
 }

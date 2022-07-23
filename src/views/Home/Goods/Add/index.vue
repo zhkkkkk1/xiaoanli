@@ -160,14 +160,11 @@ export default {
   methods: {
     async getCategories () {
       const res = await getCategories()
-      console.log(res)
       this.options = res.data.data
     },
     handleRemove (file, fileList) {
-      console.log(file, fileList)
     },
     handlePreview (file) {
-      console.log(file)
     },
     onCreated (editor) {
       this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错

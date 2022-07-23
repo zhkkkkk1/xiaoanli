@@ -22,7 +22,6 @@ const actions = {
   async tree (context) {
     const res = await tree()
     context.commit('setRightTree', res.data.data)
-    console.log(res.data.data)
   }
 }
 

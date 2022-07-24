@@ -1,7 +1,7 @@
 <template>
   <el-card>
     <!-- header -->
-    <div v-if="$route.path === '/home/goods'">
+    <div>
       <div style="display:flex">
         <div style="width:33%">
           <el-input placeholder="请输入内容" v-model="obj.query" @keyup.enter.native="seachUser">
@@ -45,7 +45,6 @@
         </el-pagination>
       </div>
     </div>
-    <router-view></router-view>
   </el-card>
 </template>
 

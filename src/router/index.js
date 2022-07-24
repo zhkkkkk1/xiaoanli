@@ -16,19 +16,16 @@ const routes = [
     }, {
       path: 'rights', component: () => import('@/views/Home/Rights'), name: '权限列表'
     }, {
-      path: 'goods',
-      component: () => import('@/views/Home/Goods'),
-      name: '商品列表',
-      children: [
-        { path: 'add', component: () => import('@/views/Home/Goods/Add') }
-      ]
+      path: 'goods', component: () => import('@/views/Home/Goods'), name: '商品列表'
     }, {
       path: 'params', component: () => import('@/views/Home/Params'), name: '分类列表'
     }, {
       path: 'categories', component: () => import('@/views/Home/Categories'), name: '商品分类'
     }, {
       path: 'orders', component: () => import('@/views/Home/Orders'), name: '订单列表'
-    }]
+    },
+    { path: 'goods/add', component: () => import('@/views/Home/Goods/Add') }
+    ]
   }
 ]
 

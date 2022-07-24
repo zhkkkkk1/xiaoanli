@@ -85,12 +85,14 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async () => {
+      }).then(() => {
         this.$message({
           type: 'success',
           message: '删除成功!'
         })
-        await delRolesRight({ rightId: this.delInfo.roleId, roleId: this.delInfo.rightId })
+        this.$nextTick(async () => {
+          await delRolesRight({ rightId: this.delInfo.roleId, roleId: this.delInfo.rightId })
+        })
       }).catch(() => {
         this.$message({
           type: 'info',

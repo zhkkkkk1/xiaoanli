@@ -12,8 +12,9 @@
 <script>
 export default {
   name: 'crumbs',
-  created () {
-    this.routes = this.$router.options.routes
+  mounted () {
+    this.routes = this.$route
+    console.log(this.routes)
   },
   data () {
     return {

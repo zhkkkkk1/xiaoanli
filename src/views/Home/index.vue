@@ -62,7 +62,7 @@ export default {
     },
     deltoken () {
       this.$store.commit('setToken', '')
-      this.$router.back()
+      this.$router.push('/login')
     },
     handleCollapseClick () {
       this.isCollapse = !this.isCollapse
